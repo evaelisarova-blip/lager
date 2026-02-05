@@ -223,7 +223,7 @@ function init() {
   }
 
   // navigation object
-  makeObject({ title: "Posts", href: "#posts" });
+makeObject({ title: "Posts", href: "./posts.html" });
 
   randomSpawn();
 
