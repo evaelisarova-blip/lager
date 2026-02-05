@@ -1,0 +1,15 @@
+body{
+  margin:0;
+  font-family:Helvetica,Arial,sans-serif;
+  background:#fff;
+  color:#111;
+}
+.page{max-width:760px;padding:28px 18px}
+.head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #ddd;padding-bottom:12px;margin-bottom:18px}
+.back{text-decoration:none;color:#111;font-size:12px;border:1px solid #ddd;padding:6px 10px;border-radius:999px}
+.title{font-size:12px;letter-spacing:.08em;color:rgba(17,17,17,.55);text-transform:uppercase}
+.post{padding:14px 0;border-bottom:1px solid #eee}
+.post__meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.chip{font-size:11px;color:#666;border:1px solid #ddd;padding:3px 7px;border-radius:999px}
+.post__title{margin:0 0 8px 0;font-size:16px}
+.post__text{margin:0;font-size:14px;line-height:1.6}
