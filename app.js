@@ -2,7 +2,6 @@ const floor = document.getElementById("floor");
 const panel = document.getElementById("panel");
 const clock = document.getElementById("clock");
 
-
 /* ---------- DATA ---------- */
 const FURNITURE = [
   "Bett","Sofa","Sessel","Couchtisch","Esstisch","Stuhl","Hocker","Schrank",
@@ -22,8 +21,65 @@ const physics = {
   maxSpeed: 2000
 };
 
-function clamp(v, a, b) {
-  return Math.max(a, Math.min(b, v));
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* ---------- POSTS ---------- */
+async function loadPosts() {
+  const res = await fetch("./posts.json", { cache: "no-store" });
+  if (!res.ok) return [];
+  return await res.json();
+}
+
+async function renderRoute() {
+  const route = (location.hash || "#posts").replace("#", "");
+
+  // визуальный “active” на кнопке Posts
+  for (const o of objects) {
+    if (o.el.tagName === "A" && o.el.href.includes("#posts")) {
+      o.el.style.borderColor = route === "posts" ? "rgba(17,17,17,.35)" : "rgba(17,17,17,.12)";
+    }
+  }
+
+  if (route !== "posts") {
+    // если хэш любой другой — всё равно показываем posts (так ты “убираешь Start”)
+    location.hash = "#posts";
+    return;
+  }
+
+  const posts = await loadPosts();
+  const items = posts
+    .slice()
+    .sort((a, b) => String(b.date).localeCompare(String(a.date)))
+    .map(p => `
+      <article style="border-top:1px solid rgba(17,17,17,.12); padding-top:10px; margin-top:10px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
+          <span style="font-size:11px;color:rgba(17,17,17,.55);border:1px solid rgba(17,17,17,.12);padding:3px 7px;border-radius:999px;background:rgba(244,244,242,.6);">
+            ${escapeHtml(p.date || "")}
+          </span>
+          ${(p.tags || []).slice(0,4).map(t => `
+            <span style="font-size:11px;color:rgba(17,17,17,.55);border:1px solid rgba(17,17,17,.12);padding:3px 7px;border-radius:999px;background:rgba(244,244,242,.6);">
+              #${escapeHtml(t)}
+            </span>
+          `).join("")}
+        </div>
+        <h2 style="margin:0 0 6px 0; font-size:14px;">${escapeHtml(p.title || "")}</h2>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:rgba(17,17,17,.82);">${escapeHtml(p.text || "")}</p>
+      </article>
+    `).join("");
+
+  panel.innerHTML = `
+    <h1 style="margin:0 0 8px 0; font-size:16px;">Posts</h1>
+    <p style="margin:0 0 10px 0; font-size:11px; color:rgba(17,17,17,.55);">${posts.length} Einträge</p>
+    <div>${items || "<p style='font-size:12px;'>Keine Beiträge gefunden.</p>"}</div>
+  `;
 }
 
 /* ---------- OBJECT CREATION ---------- */
@@ -37,8 +93,8 @@ function makeObject({ title, sub, href = null }) {
   }
 
   el.innerHTML = `
-    <div class="obj__title">${title}</div>
-    ${sub ? `<div class="obj__sub">${sub}</div>` : ""}
+    <div class="obj__title">${escapeHtml(title)}</div>
+    ${sub ? `<div class="obj__sub">${escapeHtml(sub)}</div>` : ""}
   `;
 
   floor.appendChild(el);
@@ -66,13 +122,9 @@ function makeObject({ title, sub, href = null }) {
     o.offX = px - o.x;
     o.offY = py - o.y;
 
-    o.vx = 0;
-    o.vy = 0;
+    o.vx = 0; o.vy = 0;
 
-    o.lastX = px;
-    o.lastY = py;
-    o.lastT = performance.now();
-
+    o.lastX = px; o.lastY = py; o.lastT = performance.now();
     e.preventDefault();
   });
 
@@ -85,12 +137,11 @@ function makeObject({ title, sub, href = null }) {
 
     const now = performance.now();
     const dt = Math.max(0.001, (now - o.lastT) / 1000);
+
     o.vx = clamp((px - o.lastX) / dt, -physics.maxSpeed, physics.maxSpeed);
     o.vy = clamp((py - o.lastY) / dt, -physics.maxSpeed, physics.maxSpeed);
 
-    o.lastX = px;
-    o.lastY = py;
-    o.lastT = now;
+    o.lastX = px; o.lastY = py; o.lastT = now;
 
     o.x = clamp(px - o.offX, 0, floor.clientWidth - o.w);
     o.y = clamp(py - o.offY, 0, floor.clientHeight - o.h);
@@ -115,6 +166,9 @@ function randomSpawn() {
   const pad = 10;
 
   for (const o of objects) {
+    o.w = o.el.getBoundingClientRect().width;
+    o.h = o.el.getBoundingClientRect().height;
+
     o.x = pad + Math.random() * (W - o.w - pad * 2);
     o.y = pad + Math.random() * (H - o.h - pad * 2);
     render(o);
@@ -172,6 +226,14 @@ function init() {
   makeObject({ title: "Posts", href: "#posts" });
 
   randomSpawn();
+
+  // blog routing
+  window.addEventListener("hashchange", renderRoute);
+
+  // start directly on posts
+  if (!location.hash) location.hash = "#posts";
+  renderRoute();
+
   requestAnimationFrame(step);
 }
 
