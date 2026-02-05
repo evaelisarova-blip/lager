@@ -1,0 +1,12 @@
+body{margin:0;font-family:Helvetica,Arial,sans-serif;background:#f4f4f2;overflow:hidden}
+.frame{padding:22px;height:100vh;box-sizing:border-box}
+.topbar{display:flex;justify-content:space-between;border-bottom:1px solid #ddd;padding-bottom:10px}
+.brand__mark{border:1px solid #ccc;padding:4px 8px;font-weight:bold}
+.brand__name{font-size:12px;letter-spacing:.1em;margin-left:6px}
+.meta__item{font-size:11px;margin-left:6px}
+.floor{position:relative;height:calc(100% - 50px)}
+.panel{position:absolute;left:12px;bottom:12px;background:#fff;padding:16px;border-radius:12px;width:420px;z-index:5}
+.obj{position:absolute;width:150px;height:86px;padding:12px;border:1px solid #ccc;border-radius:14px;background:rgba(255,255,255,.75);user-select:none;cursor:grab}
+.obj:active{cursor:grabbing}
+.obj__title{font-size:13px;font-weight:bold}
+.obj__sub{font-size:11px;color:#666}

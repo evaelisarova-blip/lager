@@ -1,0 +1,9 @@
+[
+  {
+    "id":"1",
+    "date":"2026-02-01",
+    "title":"Erster Eintrag",
+    "tags":["Notizen"],
+    "text":"Das ist dein erster Blogpost."
+  }
+]
