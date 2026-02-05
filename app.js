@@ -1,5 +1,4 @@
 const floor = document.getElementById("floor");
-const panel = document.getElementById("panel");
 const clock = document.getElementById("clock");
 
 /* ---------- DATA ---------- */
