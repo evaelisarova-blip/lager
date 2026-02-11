@@ -37,7 +37,7 @@ async function render(){
     ` : ""}
 
     <h2 class="post__title">${escapeHtml(p.title||"")}</h2>
-    <p class="post__text">${escapeHtml(p.text||"")}</p>
+    <p class="post__text">${escapeHtml(p.text||"").replace(/\n/g, "<br><br>")}</p>
   </article>
 `).join("") || "<p>Keine Beiträge.</p>";
 }
