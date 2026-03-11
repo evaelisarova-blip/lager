@@ -21,7 +21,18 @@ const BOOKS = [
   "./books/book1.jpg",
   "./books/book2.jpg",
   "./books/book3.jpg",
-  "./books/book4.jpg"
+  "./books/book4.jpg",
+  "./books/book5.jpg",
+  "./books/book6.jpg",
+  "./books/book7.jpg",
+  "./books/book8.jpg",
+  "./books/book9.jpg",
+  "./books/book10.jpg",
+  "./books/book11.jpg",
+  "./books/book12.jpg",
+  "./books/book13.jpg",
+  "./books/book14.jpg",
+  "./books/book15.jpg"
 ];
 
 const physics = {
