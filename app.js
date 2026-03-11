@@ -1,3 +1,4 @@
+
 const floor = document.getElementById("floor");
 const clock = document.getElementById("clock");
 
@@ -13,7 +14,7 @@ const BOOKS = [
 ];
 
 const FURNITURE=[
-"Bett","Sofa","Stuhl","Tisch","Regal","BÃžcherregal","Kommode","Bank","Schrank"
+"Bett","Sofa","Stuhl","Tisch","Regal","Bücherregal","Kommode","Bank","Schrank"
 ];
 
 const TOTAL_OBJECTS=15;
