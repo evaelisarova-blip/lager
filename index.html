@@ -3,29 +3,27 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lager Blog</title>
+  <title>Lager</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
+  <div class="frame">
+    <header class="topbar">
+      <div class="brand">Lager</div>
+      <div id="clock" class="clock"></div>
+    </header>
 
-<div class="frame">
-  <header class="topbar">
-    <div class="brand">Lager‑Blog</div>
-    <div id="clock"></div>
-  </header>
-
-  <main id="floor" class="floor"></main>
-</div>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <div class="lightbox__backdrop" id="lightboxBackdrop"></div>
-  <div class="lightbox__window">
-      <button class="lightbox__close" id="lightboxClose">×</button>
-      <img id="lightboxImage">
+    <main id="floor" class="floor" aria-label="Lagerraum"></main>
   </div>
-</div>
 
-<script src="./app.js"></script>
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox__backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox__window" role="dialog" aria-modal="true" aria-label="Buchansicht">
+      <button class="lightbox__close" id="lightboxClose" type="button">×</button>
+      <img id="lightboxImage" alt="Buchcover" />
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
 </body>
 </html>
