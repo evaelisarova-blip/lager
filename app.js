@@ -88,7 +88,7 @@ clock.textContent=new Date().toLocaleTimeString("de-CH");
 
 for(let i=0;i<TOTAL_OBJECTS;i++){
 let name=FURNITURE[Math.floor(Math.random()*FURNITURE.length)];
-if(name==="BÃžcherregal"){
+if(name==="Bücherregal"){
 makeObject(name,openBook);
 }else{
 makeObject(name);
