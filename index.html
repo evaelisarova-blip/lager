@@ -16,11 +16,38 @@
     <main id="floor" class="floor" aria-label="Lagerraum"></main>
   </div>
 
+  <!-- BOOK LIGHTBOX -->
   <div class="lightbox" id="lightbox" aria-hidden="true">
     <div class="lightbox__backdrop" id="lightboxBackdrop"></div>
     <div class="lightbox__window" role="dialog" aria-modal="true" aria-label="Buchansicht">
       <button class="lightbox__close" id="lightboxClose" type="button">×</button>
       <img id="lightboxImage" alt="Buchcover" />
+    </div>
+  </div>
+
+  <!-- TV GUIDE OVERLAY -->
+  <div class="tv-overlay" id="tvOverlay" aria-hidden="true">
+    <div class="tv-overlay__backdrop" id="tvOverlayBackdrop"></div>
+
+    <div class="tv-overlay__window" role="dialog" aria-modal="true" aria-label="TV Guide">
+      <button class="tv-overlay__close" id="tvOverlayClose" type="button">×</button>
+
+      <div class="tv-overlay__topline">
+        <div class="tv-overlay__label">TV Guide</div>
+        <div class="tv-overlay__year">ca. 2004–2009</div>
+      </div>
+
+      <div class="tv-guide">
+        <div class="tv-guide__head">
+          <div class="tv-guide__cell tv-guide__cell--channel">Sender / Land</div>
+          <div class="tv-guide__cell">18:00</div>
+          <div class="tv-guide__cell">19:00</div>
+          <div class="tv-guide__cell">20:15</div>
+          <div class="tv-guide__cell">21:15</div>
+        </div>
+
+        <div class="tv-guide__body" id="tvGuideBody"></div>
+      </div>
     </div>
   </div>
 
