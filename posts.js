@@ -15,30 +15,35 @@ async function loadPosts(){
 
 async function render(){
   const root = document.getElementById("posts");
-  const posts = await loadPosts();
- root.innerHTML = posts.map(p => `
-  <article class="post">
-    <div class="post__meta">
-      <span class="chip">${escapeHtml(p.date||"")}</span>
-      ${(p.tags||[]).map(t=>`<span class="chip">#${escapeHtml(t)}</span>`).join("")}
-    </div>
+  let posts = [];
+  try {
+    posts = await loadPosts();
+  } catch (e) {
+    root.innerHTML = "<p>posts.json ist ungültig (JSON-Fehler).</p>";
+    return;
+  }
 
-    ${p.video ? `
-      <div style="margin-bottom:16px;">
-        <iframe 
-          src="${p.video}"
-          width="100%" 
-          height="400"
-          frameborder="0"
-          allowfullscreen
-          style="border-radius:12px;">
-        </iframe>
-      </div>
-    ` : ""}
+  root.innerHTML = posts.map(p => {
+    const raw = (p.text || "");
+    const htmlText = escapeHtml(raw).replaceAll("\\n", "<br>").replaceAll("\n", "<br>");
 
-    <h2 class="post__title">${escapeHtml(p.title||"")}</h2>
-    <p class="post__text">${escapeHtml(p.text||"").replace(/\n/g, "<br><br>")}</p>
-  </article>
-`).join("") || "<p>Keine Beiträge.</p>";
+    return `
+      <article class="post">
+        <div class="post__meta">
+          <span class="chip">${escapeHtml(p.date||"")}</span>
+          ${(p.tags||[]).map(t=>`<span class="chip">#${escapeHtml(t)}</span>`).join("")}
+        </div>
+
+        ${p.video ? `
+          <div style="margin:0 0 16px 0;">
+            <iframe src="${p.video}" width="100%" height="400" frameborder="0" allowfullscreen style="border-radius:12px;"></iframe>
+          </div>
+        ` : ""}
+
+        <h2 class="post__title">${escapeHtml(p.title||"")}</h2>
+        <p class="post__text">${htmlText}</p>
+      </article>
+    `;
+  }).join("") || "<p>Keine Beiträge.</p>";
 }
 render();
