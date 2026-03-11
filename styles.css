@@ -1,11 +1,13 @@
-
 :root{
   --bg:#f4f4f2;
   --ink:#111;
+  --line:rgba(17,17,17,.14);
+  --muted:rgba(17,17,17,.55);
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
+
 body{
   margin:0;
   font-family:Helvetica,Arial,sans-serif;
@@ -13,7 +15,9 @@ body{
   color:var(--ink);
 }
 
-.frame{padding:20px}
+.frame{
+  padding:20px;
+}
 
 .topbar{
   display:flex;
@@ -47,7 +51,7 @@ body{
   min-height:104px;
   padding:14px;
   background:rgba(255,255,255,.72);
-  border:1px solid rgba(17,17,17,.14);
+  border:1px solid var(--line);
   border-radius:16px;
   user-select:none;
   cursor:grab;
@@ -70,7 +74,7 @@ body{
 .obj__sub{
   margin-top:4px;
   font-size:11px;
-  color:rgba(17,17,17,.55);
+  color:var(--muted);
 }
 
 .obj--nav{
@@ -86,6 +90,12 @@ body{
 .obj--shelf{
   border-color:rgba(17,17,17,.28);
 }
+
+.obj--tv{
+  border-color:rgba(17,17,17,.28);
+}
+
+/* BOOK LIGHTBOX */
 
 .lightbox{
   position:fixed;
@@ -140,14 +150,217 @@ body{
   cursor:pointer;
 }
 
+/* TV OVERLAY */
+
+.tv-overlay{
+  position:fixed;
+  inset:0;
+  display:none;
+  z-index:1000;
+}
+
+.tv-overlay.is-open{
+  display:block;
+}
+
+.tv-overlay__backdrop{
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,.84);
+  backdrop-filter:blur(8px);
+}
+
+.tv-overlay__window{
+  position:absolute;
+  inset:36px;
+  background:#fdfdfc;
+  border:1px solid rgba(17,17,17,.12);
+  border-radius:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,.12);
+  padding:22px 22px 18px 22px;
+  overflow:hidden;
+}
+
+.tv-overlay__close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:999px;
+  background:#111;
+  color:#fff;
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.tv-overlay__topline{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  margin-bottom:16px;
+  padding-right:52px;
+}
+
+.tv-overlay__label{
+  font-size:13px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.tv-overlay__year{
+  font-size:11px;
+  color:var(--muted);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* TV guide look */
+
+.tv-guide{
+  height:calc(100% - 28px);
+  display:flex;
+  flex-direction:column;
+  border:1px solid rgba(17,17,17,.14);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.tv-guide__head{
+  display:grid;
+  grid-template-columns:180px repeat(4, 1fr);
+  background:#111;
+  color:#fff;
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.tv-guide__cell{
+  padding:12px 10px;
+  border-right:1px solid rgba(255,255,255,.12);
+}
+
+.tv-guide__cell:last-child{
+  border-right:none;
+}
+
+.tv-guide__cell--channel{
+  background:#0d0d0d;
+}
+
+.tv-guide__body{
+  position:relative;
+  flex:1;
+  overflow:hidden;
+  background:
+    linear-gradient(to bottom, rgba(17,17,17,.03), rgba(17,17,17,0)) top/100% 50px no-repeat,
+    #fff;
+}
+
+.tv-guide__track{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  animation:tvGuideScroll 24s linear infinite;
+}
+
+.tv-row{
+  display:grid;
+  grid-template-columns:180px repeat(4, 1fr);
+  min-height:74px;
+  border-top:1px solid rgba(17,17,17,.08);
+}
+
+.tv-row:first-child{
+  border-top:none;
+}
+
+.tv-row__channel{
+  padding:12px 10px;
+  border-right:1px solid rgba(17,17,17,.08);
+  background:rgba(244,244,242,.65);
+}
+
+.tv-row__country{
+  display:block;
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-top:4px;
+}
+
+.tv-slot{
+  padding:10px;
+  border-right:1px solid rgba(17,17,17,.08);
+  display:flex;
+  align-items:flex-start;
+}
+
+.tv-slot:last-child{
+  border-right:none;
+}
+
+.tv-program{
+  width:100%;
+  min-height:52px;
+  border:1px solid rgba(17,17,17,.1);
+  border-radius:12px;
+  padding:8px 9px;
+  background:#fff;
+}
+
+.tv-program__title{
+  font-size:12px;
+  font-weight:700;
+  line-height:1.2;
+  margin-bottom:4px;
+}
+
+.tv-program__meta{
+  font-size:10px;
+  color:var(--muted);
+  line-height:1.3;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+
+@keyframes tvGuideScroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@media (max-width: 1000px){
+  .tv-overlay__window{
+    inset:14px;
+    padding:16px;
+  }
+
+  .tv-guide{
+    overflow:auto;
+  }
+
+  .tv-guide__head,
+  .tv-row{
+    min-width:880px;
+  }
+}
+
 @media (max-width:720px){
   .frame{padding:12px}
   .floor{height:calc(100vh - 54px)}
+
   .obj{
     width:148px;
     min-height:94px;
     padding:12px;
   }
+
   .lightbox__window{
     inset:12px;
     padding:16px;
