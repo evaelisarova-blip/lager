@@ -6,15 +6,20 @@ const lightboxBackdrop = document.getElementById("lightboxBackdrop");
 const lightboxClose = document.getElementById("lightboxClose");
 const lightboxImage = document.getElementById("lightboxImage");
 
+const tvOverlay = document.getElementById("tvOverlay");
+const tvOverlayBackdrop = document.getElementById("tvOverlayBackdrop");
+const tvOverlayClose = document.getElementById("tvOverlayClose");
+const tvGuideBody = document.getElementById("tvGuideBody");
+
 const FURNITURE = [
   "Bett","Sofa","Sessel","Couchtisch","Esstisch","Stuhl","Hocker","Schrank",
   "Kleiderschrank","Kommode","Nachttisch","Regal","Sideboard",
-  "Vitrine","Schreibtisch","Bürostuhl","TV-Board","Wohnwand","Bank",
+  "Vitrine","Schreibtisch","Bürostuhl","Wohnwand","Bank",
   "Truhe","Spiegel","Garderobe","Schuhschrank","Küchenzeile",
   "Barhocker","Liege","Beistelltisch","Wickelkommode","Sekretär"
 ];
 
-const TOTAL_OBJECTS = 14;
+const TOTAL_OBJECTS = 13;
 const objects = [];
 
 const BOOKS = [
@@ -35,6 +40,99 @@ const BOOKS = [
   "./books/book15.jpg"
 ];
 
+const TV_GUIDE_ROWS = [
+  {
+    channel: "MTV USA",
+    country: "USA",
+    slots: [
+      ["TRL", "Music / Live"],
+      ["Pimp My Ride", "Reality"],
+      ["Punk’d", "Comedy"],
+      ["The Hills", "Reality"]
+    ]
+  },
+  {
+    channel: "FOX",
+    country: "USA",
+    slots: [
+      ["The O.C.", "Teen Drama"],
+      ["Malcolm in the Middle", "Sitcom"],
+      ["House", "Drama"],
+      ["Cops", "Reality"]
+    ]
+  },
+  {
+    channel: "The WB / CW",
+    country: "USA",
+    slots: [
+      ["One Tree Hill", "Teen Drama"],
+      ["Gilmore Girls", "Drama"],
+      ["America’s Next Top Model", "Reality"],
+      ["Gossip Girl", "Drama"]
+    ]
+  },
+  {
+    channel: "ProSieben",
+    country: "Deutschland",
+    slots: [
+      ["TV total", "Late Comedy"],
+      ["Popstars", "Casting"],
+      ["Galileo", "Magazine"],
+      ["Desperate Housewives", "Dubbed Drama"]
+    ]
+  },
+  {
+    channel: "RTL",
+    country: "Deutschland",
+    slots: [
+      ["Gute Zeiten, schlechte Zeiten", "Soap"],
+      ["DSDS", "Casting"],
+      ["Wer wird Millionär?", "Quiz"],
+      ["Alarm für Cobra 11", "Action"]
+    ]
+  },
+  {
+    channel: "SAT.1",
+    country: "Deutschland",
+    slots: [
+      ["Richterin Barbara Salesch", "Court Show"],
+      ["Lenßen & Partner", "Scripted Reality"],
+      ["Niedrig und Kuhnt", "Crime"],
+      ["Das perfekte Dinner", "Lifestyle"]
+    ]
+  },
+  {
+    channel: "ТНТ",
+    country: "Россия",
+    slots: [
+      ["Дом-2", "Reality"],
+      ["Счастливы вместе", "Sitcom"],
+      ["Универ", "Sitcom"],
+      ["Comedy Club", "Comedy"]
+    ]
+  },
+  {
+    channel: "СТС",
+    country: "Россия",
+    slots: [
+      ["Папины дочки", "Sitcom"],
+      ["Кадетство", "Drama"],
+      ["Моя прекрасная няня", "Sitcom"],
+      ["Не родись красивой", "Telenovela"]
+    ]
+  },
+  {
+    channel: "Первый канал",
+    country: "Россия",
+    slots: [
+      ["Фабрика звёзд", "Music Reality"],
+      ["Пусть говорят", "Talk Show"],
+      ["Кто хочет стать миллионером?", "Quiz"],
+      ["Что? Где? Когда?", "Intellectual Game"]
+    ]
+  }
+];
+
 const physics = {
   friction: 0.985,
   bounce: 0.85,
@@ -51,6 +149,8 @@ function updateClock() {
   }) + " Zürich";
 }
 
+/* ---------- BOOK OVERLAY ---------- */
+
 function openBookLightbox() {
   const src = BOOKS[Math.floor(Math.random() * BOOKS.length)];
   lightboxImage.src = src;
@@ -65,12 +165,63 @@ function closeBookLightbox() {
   document.body.style.overflow = "";
 }
 
+/* ---------- TV OVERLAY ---------- */
+
+function buildTvRows() {
+  const duplicated = [...TV_GUIDE_ROWS, ...TV_GUIDE_ROWS];
+
+  tvGuideBody.innerHTML = `
+    <div class="tv-guide__track">
+      ${duplicated.map(row => `
+        <div class="tv-row">
+          <div class="tv-row__channel">
+            <strong>${row.channel}</strong>
+            <span class="tv-row__country">${row.country}</span>
+          </div>
+
+          ${row.slots.map(slot => `
+            <div class="tv-slot">
+              <div class="tv-program">
+                <div class="tv-program__title">${slot[0]}</div>
+                <div class="tv-program__meta">${slot[1]}</div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function openTvOverlay() {
+  buildTvRows();
+  tvOverlay.classList.add("is-open");
+  tvOverlay.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeTvOverlay() {
+  tvOverlay.classList.remove("is-open");
+  tvOverlay.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+}
+
+/* ---------- OVERLAY EVENTS ---------- */
+
 lightboxBackdrop.addEventListener("click", closeBookLightbox);
 lightboxClose.addEventListener("click", closeBookLightbox);
 
+tvOverlayBackdrop.addEventListener("click", closeTvOverlay);
+tvOverlayClose.addEventListener("click", closeTvOverlay);
+
 window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") closeBookLightbox();
+  if (e.key === "Escape") {
+    closeBookLightbox();
+    closeTvOverlay();
+  }
 });
+
+/* ---------- OBJECTS ---------- */
 
 function render(o) {
   o.el.style.left = `${o.x}px`;
@@ -113,7 +264,7 @@ function makeObject({ title, sub = "", href = null, onClick = null, className = 
   };
 
   el.addEventListener("pointerdown", (e) => {
-    if (lightbox.classList.contains("is-open")) return;
+    if (lightbox.classList.contains("is-open") || tvOverlay.classList.contains("is-open")) return;
 
     el.setPointerCapture?.(e.pointerId);
     o.drag = true;
@@ -204,6 +355,8 @@ function randomSpawn() {
   }
 }
 
+/* ---------- LOOP ---------- */
+
 let last = performance.now();
 
 function step(ts) {
@@ -231,6 +384,8 @@ function step(ts) {
   requestAnimationFrame(step);
 }
 
+/* ---------- INIT ---------- */
+
 function init() {
   updateClock();
   setInterval(updateClock, 1000);
@@ -257,9 +412,15 @@ function init() {
     className: "obj--shelf"
   });
 
+  makeObject({
+    title: "TV-Board",
+    sub: "Objekt TV",
+    onClick: openTvOverlay,
+    className: "obj--tv"
+  });
+
   randomSpawn();
   requestAnimationFrame(step);
 }
 
 window.addEventListener("load", init);
-init();
